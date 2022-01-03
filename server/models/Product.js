@@ -19,6 +19,11 @@ const ProductSchema = new mongoose.Schema({
     categories: Array,
     size: String,
     color: String,
+    ownerId: {
+        type: mongoose.Types.ObjectId,
+        required: true,
+        ref: 'User'
+    }
 },
 {
     timestamps: true
