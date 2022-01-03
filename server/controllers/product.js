@@ -1,5 +1,6 @@
 const Product = require('../models/Product');
 const asyncHandler = require("express-async-handler");
+const { query } = require('express');
 
 exports.postProduct = asyncHandler(async (req, res, next) => {
     let newProduct = { title, desc, img, price, size, categories, color } = req.body;
@@ -66,3 +67,19 @@ exports.getProduct = asyncHandler(async (req, res, next) => {
     }
 });
 
+exports.getAllProducts = asyncHandler(async (req, res, next) => {
+    const qCategory = req.query.category;
+    if (query.qCategory){
+        const products = await Product.find({ categories: { $in: [qCategory] } });
+    } else {
+        const products = await Product.find()
+    };
+
+    res.status(200).json({  
+        success: {
+            products
+        }
+    })
+    
+    
+})
