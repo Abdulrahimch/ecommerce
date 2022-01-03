@@ -53,3 +53,21 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
         res.status(400).send(e);
     }
 });
+
+// @route Get /users/stat
+// @desc get user
+// @access Private
+exports.getStat = asyncHandler(async (req, res, next) => {
+  const date = new Date();
+  const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
+
+  const data = await User.aggregate([
+    { $match: { createdAt: { $gte: lastYear } } },
+    { $project: { month: { $month: '$createdAt' } } },
+    { $group: { _id: '$month', total: { $sum: 1 } } }
+  ]);
+  if (data) res.status(200).json(data);
+  else {
+    throw new Error('something went wrong, please try again')
+  }
+});
