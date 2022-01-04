@@ -6,7 +6,8 @@ const { postOrder,
         updateOrder,
         deleteOrder,
         getOrder,
-        getOrders
+        getOrders,
+        getIncome
        } = require("../controllers/order");
 
 router.route("/").post(protect, postOrder);
@@ -18,5 +19,7 @@ router.route("/:id").patch(protect, updateOrder);
 router.route("/:id").get(protect, getOrder);
 
 router.route("/:id").delete(protect, deleteOrder);
+
+router.route("/income/").get(protect, isAdmin, getIncome);
 
 module.exports = router;

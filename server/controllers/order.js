@@ -96,3 +96,29 @@ exports.deleteOrder = asyncHandler(async (req, res, next) => {
 
 });
 
+exports.getIncome = asyncHandler(async (req, res, next) => {
+    const date = new Date();
+    const lastMonth = new Date(date.setMonth(date.getMonth() - 1));
+    const prevMonth = new Date(new Date.setMonth(lastMonth.getMonth() -1));
+    
+    const income = await Order.aggregate([
+        { $match: {createdAt: {$gte: prevMonth }} },
+        { $project : {
+            month: { $month: "$createdAt" },
+            sales: "$amount"
+        }},
+        { $group: {
+            _id: "$month",
+            total: { $sum: "$sales" }
+        } }
+    ]);
+
+    res.status(200).json({
+        success: {
+            income
+        }
+    })
+
+
+
+})
